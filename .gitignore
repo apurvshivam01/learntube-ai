@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Production builds
+dist/
+**/dist/
+build/
+**/build/
+
+# Local Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Local Data / Database
+server/data/*.json
+!server/data/.gitkeep
+data/*.json
+
+# Logs & temp
+*.log
+logs/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

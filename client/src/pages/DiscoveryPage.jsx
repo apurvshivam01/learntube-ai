@@ -1,0 +1,139 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  Compass,
+  GraduationCap,
+  Sparkles,
+  Users,
+  Search,
+  ExternalLink,
+  BookOpen,
+  ArrowRight,
+  ShieldCheck,
+} from 'lucide-react';
+import { api } from '../services/api';
+
+export const DiscoveryPage = () => {
+  const [channels, setChannels] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [filterQuery, setFilterQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadChannels = async () => {
+      try {
+        const res = await api.getChannels();
+        if (res.success) setChannels(res.channels);
+      } catch (e) {
+        console.warn('Channels load error:', e.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadChannels();
+  }, []);
+
+  const categories = [
+    'all',
+    'Computer Science & Engineering',
+    'AI, Systems & Algorithms',
+    'Full-Stack Software Engineering',
+    'Mathematics & Neural Networks',
+    'Introduction to Computer Science',
+  ];
+
+  const filtered = channels.filter((ch) => {
+    const matchesCat = selectedCategory === 'all' || ch.category.toLowerCase().includes(selectedCategory.toLowerCase());
+    const matchesQuery = !filterQuery || ch.title.toLowerCase().includes(filterQuery.toLowerCase()) || ch.description.toLowerCase().includes(filterQuery.toLowerCase()) || ch.university.toLowerCase().includes(filterQuery.toLowerCase());
+    return matchesCat && matchesQuery;
+  });
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+      {/* Page Header */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400">
+          <Compass className="w-4 h-4" />
+          <span>Verified University & Channel Discovery</span>
+        </div>
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+          Learn From The World's Top Classrooms
+        </h1>
+        <p className="text-sm text-slate-400 max-w-2xl">
+          LearnTube AI curates courses directly from verified open courseware programs, Ivy League institutions, and acclaimed engineering educators. No clickbait or low-effort filler.
+        </p>
+      </div>
+
+      {/* Filter and Search Bar */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-slate-900 border border-slate-800">
+        <div className="relative w-full sm:w-80">
+          <input
+            type="text"
+            value={filterQuery}
+            onChange={(e) => setFilterQuery(e.target.value)}
+            placeholder="Search institution or instructor..."
+            className="w-full bg-slate-950 text-xs text-slate-200 placeholder-slate-500 pl-9 pr-3 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-emerald-500/60"
+          />
+          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+        </div>
+
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 scrollbar-none">
+          {['All', 'MIT & Stanford', 'Algorithms', 'AI & Math'].map((tab, idx) => (
+            <button
+              key={idx}
+              onClick={() => setFilterQuery(tab === 'All' ? '' : tab)}
+              className="text-xs whitespace-nowrap px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition-colors"
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Channels Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filtered.map((ch) => (
+          <div
+            key={ch.id}
+            className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-emerald-500/40 flex flex-col justify-between space-y-4 transition-all hover:-translate-y-1 group"
+          >
+            <div className="space-y-3">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-950 border border-slate-800 shrink-0">
+                    <img src={ch.thumbnail} alt={ch.title} className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-white group-hover:text-emerald-400 transition-colors">
+                      {ch.title}
+                    </h3>
+                    <span className="text-[11px] text-emerald-400 font-semibold block">
+                      {ch.university}
+                    </span>
+                  </div>
+                </div>
+
+                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" title="Verified Educational Source" />
+              </div>
+
+              <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">
+                {ch.description}
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+              <span className="text-slate-500 font-medium">{ch.subscribers} Subscribers</span>
+              <Link
+                to={`/?q=${encodeURIComponent(ch.title)}`}
+                className="text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1 group-hover:underline"
+              >
+                <span>Browse Lessons</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};

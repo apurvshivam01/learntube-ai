@@ -1,0 +1,25 @@
+{
+  "name": "learntube-ai",
+  "version": "1.0.0",
+  "description": "LearnTube AI — Turn YouTube into your personal university",
+  "type": "module",
+  "scripts": {
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build:client": "cd client && npm run build",
+    "start": "cd server && npm start"
+  },
+  "keywords": [
+    "education",
+    "youtube",
+    "ai-tutor",
+    "learning-path",
+    "socratic-learning",
+    "portfolio-project"
+  ],
+  "author": "Apurv Sharma",
+  "license": "MIT",
+  "dependencies": {
+    "isomorphic-git": "^1.44.10"
+  }
+}
