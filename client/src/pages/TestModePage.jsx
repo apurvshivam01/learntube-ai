@@ -5,12 +5,10 @@ import {
   Clock,
   Award,
   AlertTriangle,
-  RotateCw,
   Sparkles,
   ArrowRight,
   ShieldAlert,
   Loader2,
-  Trophy,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { api } from '../services/api';
@@ -61,52 +59,53 @@ export const TestModePage = () => {
         difficulty,
       });
 
-      if (res.success && res.questions?.length > 0) {
-        setQuestions(res.questions);
+      if (res.success && res.quiz?.questions?.length) {
+        setQuestions(res.quiz.questions);
         setSelectedAnswers({});
         setFlaggedQuestions({});
-        setCurrentQuestionIndex(0);
+        setTimeLeftSeconds(questionCount * 60);
         setIsSubmitted(false);
         setTestResult(null);
-        setTimeLeftSeconds(questionCount * 60); // 1 minute per question
+        setCurrentQuestionIndex(0);
         setIsTestActive(true);
+        showToast('Examination session active. Good luck!');
+      } else {
+        showToast('Failed to generate test paper', 'error');
       }
     } catch (e) {
-      showToast('Could not initiate exam environment', 'error');
+      showToast('Error loading test', 'error');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSelectOption = (qId, optionIdx) => {
+  const handleSelectOption = (qId, optionIndex) => {
     if (isSubmitted) return;
     setSelectedAnswers((prev) => ({
       ...prev,
-      [qId]: optionIdx,
+      [qId]: optionIndex,
     }));
   };
 
-  const toggleFlagQuestion = (qIndex) => {
+  const toggleFlagQuestion = (idx) => {
     setFlaggedQuestions((prev) => ({
       ...prev,
-      [qIndex]: !prev[qIndex],
+      [idx]: !prev[idx],
     }));
   };
 
   const handleSubmitTest = async () => {
-    if (isSubmitted) return;
-
     let score = 0;
     const weakTopics = [];
     const strongTopics = [];
 
     questions.forEach((q) => {
-      const chosen = selectedAnswers[q.id];
-      if (chosen === q.correctIndex) {
+      const isCorrect = selectedAnswers[q.id] === q.correctIndex;
+      if (isCorrect) {
         score++;
-        if (q.concept) strongTopics.push(q.concept);
+        strongTopics.push(q.topic || subject);
       } else {
-        if (q.concept) weakTopics.push(q.concept);
+        weakTopics.push(q.topic || subject);
       }
     });
 
@@ -155,32 +154,32 @@ export const TestModePage = () => {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Header */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400">
+        <div className="flex items-center gap-2 text-xs font-semibold text-teal-400 uppercase tracking-wider">
           <Award className="w-4 h-4" />
           <span>Exam Simulation & Assessment Sandbox</span>
         </div>
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+        <h1 className="text-2xl sm:text-4xl font-bold font-heading text-white tracking-tight">
           Test Yourself Mode
         </h1>
-        <p className="text-sm text-slate-400 max-w-2xl">
+        <p className="text-sm text-[#94A3B8] max-w-2xl leading-relaxed">
           An isolated testing environment that strictly hides videos, lecture notes, and AI explanations until submission to simulate real university and GATE examination conditions.
         </p>
       </div>
 
       {/* Test Setup Screen */}
       {!isTestActive && (
-        <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-6 shadow-xl">
-          <h2 className="text-base font-bold text-white">Configure Your Examination</h2>
+        <div className="p-6 rounded-2xl bg-[#111A2B] border border-[#22304A] space-y-6">
+          <h2 className="text-base font-semibold text-white">Configure Your Examination</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-2">
                 Exam Subject
               </label>
               <select
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                className="w-full bg-slate-950 text-xs text-slate-200 px-3.5 py-3 rounded-xl border border-slate-700 focus:outline-none"
+                className="w-full bg-[#0B1220] text-xs text-[#F8FAFC] px-3.5 py-2.5 rounded-lg border border-[#22304A] focus:outline-none focus:border-teal-500"
               >
                 <option value="Operating Systems">Operating Systems</option>
                 <option value="Data Structures and Algorithms">Data Structures & Algorithms</option>
@@ -191,13 +190,13 @@ export const TestModePage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-2">
                 Test Mode
               </label>
               <select
                 value={testMode}
                 onChange={(e) => setTestMode(e.target.value)}
-                className="w-full bg-slate-950 text-xs text-slate-200 px-3.5 py-3 rounded-xl border border-slate-700 focus:outline-none"
+                className="w-full bg-[#0B1220] text-xs text-[#F8FAFC] px-3.5 py-2.5 rounded-lg border border-[#22304A] focus:outline-none focus:border-teal-500"
               >
                 <option value="Course Test">Comprehensive Course Test</option>
                 <option value="Topic Test">Topic Focus Test</option>
@@ -206,13 +205,13 @@ export const TestModePage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-2">
                 Number of Questions
               </label>
               <select
                 value={questionCount}
                 onChange={(e) => setQuestionCount(Number(e.target.value))}
-                className="w-full bg-slate-950 text-xs text-slate-200 px-3.5 py-3 rounded-xl border border-slate-700 focus:outline-none"
+                className="w-full bg-[#0B1220] text-xs text-[#F8FAFC] px-3.5 py-2.5 rounded-lg border border-[#22304A] focus:outline-none focus:border-teal-500"
               >
                 <option value={5}>5 Questions (5 mins)</option>
                 <option value={10}>10 Questions (10 mins)</option>
@@ -220,13 +219,13 @@ export const TestModePage = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-2">
                 Difficulty Level
               </label>
               <select
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
-                className="w-full bg-slate-950 text-xs text-slate-200 px-3.5 py-3 rounded-xl border border-slate-700 focus:outline-none"
+                className="w-full bg-[#0B1220] text-xs text-[#F8FAFC] px-3.5 py-2.5 rounded-lg border border-[#22304A] focus:outline-none focus:border-teal-500"
               >
                 <option value="Medium">Medium (Standard University)</option>
                 <option value="Hard">Hard (GATE Level)</option>
@@ -235,16 +234,16 @@ export const TestModePage = () => {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+          <div className="p-4 rounded-xl bg-[#0B1220] border border-[#22304A] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-xs text-amber-400">
-              <ShieldAlert className="w-4 h-4" />
+              <ShieldAlert className="w-4 h-4 shrink-0" />
               <span>All videos and notes will be hidden during this timed session.</span>
             </div>
 
             <button
               onClick={handleStartTest}
               disabled={isLoading}
-              className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-slate-950 font-bold text-xs transition-all shadow-md shadow-emerald-600/25 flex items-center gap-2"
+              className="px-6 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 disabled:opacity-40 text-[#070B14] font-semibold text-xs transition-colors flex items-center justify-center gap-2 shrink-0"
             >
               {isLoading ? (
                 <>
@@ -266,21 +265,21 @@ export const TestModePage = () => {
       {isTestActive && (
         <div className="space-y-6">
           {/* Exam Status Bar */}
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between shadow-lg">
+          <div className="p-4 rounded-xl bg-[#111A2B] border border-[#22304A] flex items-center justify-between">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-teal-400">
                 OFFICIAL EXAMINATION IN PROGRESS
               </span>
-              <h3 className="text-sm font-bold text-white">{subject} • {difficulty}</h3>
+              <h3 className="text-sm font-semibold text-white">{subject} • {difficulty}</h3>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {/* Timer */}
               <div
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl font-mono text-xs font-bold border ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-mono text-xs font-semibold border ${
                   timeLeftSeconds < 60
-                    ? 'bg-red-500/20 text-red-400 border-red-500/30 animate-pulse'
-                    : 'bg-slate-950 text-emerald-400 border-slate-800'
+                    ? 'bg-red-500/15 text-red-400 border-red-500/30 animate-pulse'
+                    : 'bg-[#0B1220] text-teal-400 border-[#22304A]'
                 }`}
               >
                 <Clock className="w-4 h-4" />
@@ -290,14 +289,14 @@ export const TestModePage = () => {
               {!isSubmitted ? (
                 <button
                   onClick={handleSubmitTest}
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs shadow-md transition-all"
+                  className="px-4 py-2 rounded-lg bg-teal-500 hover:bg-teal-400 text-[#070B14] font-semibold text-xs transition-colors"
                 >
                   Submit Paper
                 </button>
               ) : (
                 <button
                   onClick={() => setIsTestActive(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold"
+                  className="px-4 py-2 rounded-lg bg-[#162033] hover:bg-[#1f2d47] text-white text-xs font-medium border border-[#22304A]"
                 >
                   Exit Exam
                 </button>
@@ -306,29 +305,29 @@ export const TestModePage = () => {
           </div>
 
           {/* Question Palette & Navigator */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
             {questions.map((q, idx) => {
               const isAnswered = selectedAnswers[q.id] !== undefined;
               const isCurrent = idx === currentQuestionIndex;
               const isFlagged = flaggedQuestions[idx];
 
-              let badgeStyle = 'bg-slate-900 text-slate-400 border-slate-800';
+              let badgeStyle = 'bg-[#111A2B] text-[#94A3B8] border-[#22304A]';
 
               if (isAnswered) {
-                badgeStyle = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold';
+                badgeStyle = 'bg-teal-500/15 text-teal-300 border-teal-500/40 font-semibold';
               }
               if (isFlagged) {
-                badgeStyle = 'bg-amber-500/20 text-amber-300 border-amber-500/40';
+                badgeStyle = 'bg-amber-500/15 text-amber-300 border-amber-500/40';
               }
               if (isCurrent) {
-                badgeStyle += ' ring-2 ring-emerald-400';
+                badgeStyle += ' ring-2 ring-teal-400';
               }
 
               return (
                 <button
                   key={idx}
                   onClick={() => setCurrentQuestionIndex(idx)}
-                  className={`w-9 h-9 rounded-xl border flex items-center justify-center text-xs font-mono shrink-0 transition-all ${badgeStyle}`}
+                  className={`w-9 h-9 rounded-lg border flex items-center justify-center text-xs font-mono shrink-0 transition-all ${badgeStyle}`}
                 >
                   {idx + 1}
                 </button>
@@ -338,18 +337,18 @@ export const TestModePage = () => {
 
           {/* Active Question Display */}
           {questions[currentQuestionIndex] && (
-            <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-5 shadow-2xl">
+            <div className="p-6 rounded-2xl bg-[#111A2B] border border-[#22304A] space-y-5">
               <div className="flex items-start justify-between gap-3">
-                <span className="text-xs font-bold text-emerald-400 font-mono">
+                <span className="text-xs font-semibold text-teal-400 font-mono">
                   Question {currentQuestionIndex + 1} of {questions.length}
                 </span>
 
                 <button
                   onClick={() => toggleFlagQuestion(currentQuestionIndex)}
-                  className={`text-xs px-2.5 py-1 rounded-lg border transition-colors ${
+                  className={`text-xs px-2.5 py-1 rounded-md border transition-colors ${
                     flaggedQuestions[currentQuestionIndex]
-                      ? 'bg-amber-500/20 border-amber-500/30 text-amber-400 font-semibold'
-                      : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-amber-500/15 border-amber-500/30 text-amber-300 font-medium'
+                      : 'bg-[#0B1220] border-[#22304A] text-[#94A3B8] hover:text-white'
                   }`}
                 >
                   {flaggedQuestions[currentQuestionIndex] ? '★ Flagged' : '☆ Mark for Review'}
@@ -367,19 +366,19 @@ export const TestModePage = () => {
                   const isSelected = selectedAnswers[qId] === optIdx;
                   const isCorrect = optIdx === questions[currentQuestionIndex].correctIndex;
 
-                  let optClass = 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700';
+                  let optClass = 'bg-[#0B1220] border-[#22304A] text-[#94A3B8] hover:border-[#324466] hover:text-white';
 
                   if (isSelected && !isSubmitted) {
-                    optClass = 'bg-emerald-500/20 border-emerald-500/60 text-emerald-300 font-bold';
+                    optClass = 'bg-teal-500/15 border-teal-500/60 text-teal-300 font-semibold';
                   }
 
                   if (isSubmitted) {
                     if (isCorrect) {
-                      optClass = 'bg-emerald-500/20 border-emerald-500 text-emerald-300 font-bold';
+                      optClass = 'bg-teal-500/15 border-teal-500 text-teal-300 font-semibold';
                     } else if (isSelected && !isCorrect) {
-                      optClass = 'bg-red-500/20 border-red-500 text-red-300';
+                      optClass = 'bg-red-500/15 border-red-500 text-red-300';
                     } else {
-                      optClass = 'opacity-40 bg-slate-950 border-slate-800 text-slate-500';
+                      optClass = 'opacity-40 bg-[#0B1220] border-[#22304A] text-[#64748B]';
                     }
                   }
 
@@ -388,17 +387,17 @@ export const TestModePage = () => {
                       key={optIdx}
                       onClick={() => handleSelectOption(qId, optIdx)}
                       disabled={isSubmitted}
-                      className={`w-full p-4 rounded-2xl border text-left text-xs sm:text-sm transition-all flex items-center justify-between ${optClass}`}
+                      className={`w-full p-4 rounded-xl border text-left text-xs sm:text-sm transition-all flex items-center justify-between ${optClass}`}
                     >
                       <span>
-                        <strong className="mr-3 text-slate-500 font-mono">
+                        <strong className="mr-3 text-[#64748B] font-mono">
                           {String.fromCharCode(65 + optIdx)}.
                         </strong>
                         {opt}
                       </span>
 
                       {isSubmitted && isCorrect && (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                        <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0" />
                       )}
                       {isSubmitted && isSelected && !isCorrect && (
                         <XCircle className="w-5 h-5 text-red-400 shrink-0" />
@@ -410,23 +409,23 @@ export const TestModePage = () => {
 
               {/* Post-Submit Question Explanation */}
               {isSubmitted && (
-                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
-                  <div className="font-bold text-emerald-400 flex items-center gap-1.5">
+                <div className="p-4 rounded-xl bg-[#0B1220] border border-[#22304A] space-y-2 text-xs">
+                  <div className="font-semibold text-teal-400 flex items-center gap-1.5">
                     <Sparkles className="w-4 h-4" />
                     <span>Official Solution & Rationale:</span>
                   </div>
-                  <p className="text-slate-300 leading-relaxed">
+                  <p className="text-[#94A3B8] leading-relaxed">
                     {questions[currentQuestionIndex].explanation}
                   </p>
                 </div>
               )}
 
               {/* Navigation Bar */}
-              <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-between pt-4 border-t border-[#22304A]">
                 <button
                   onClick={() => setCurrentQuestionIndex((prev) => Math.max(0, prev - 1))}
                   disabled={currentQuestionIndex === 0}
-                  className="px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-300 disabled:opacity-30 text-xs font-semibold"
+                  className="px-4 py-2 rounded-lg bg-[#0B1220] hover:bg-[#162033] border border-[#22304A] text-[#94A3B8] hover:text-white disabled:opacity-30 text-xs font-medium transition-colors"
                 >
                   ← Previous
                 </button>
@@ -436,7 +435,7 @@ export const TestModePage = () => {
                     setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1))
                   }
                   disabled={currentQuestionIndex === questions.length - 1}
-                  className="px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-300 disabled:opacity-30 text-xs font-semibold"
+                  className="px-4 py-2 rounded-lg bg-[#0B1220] hover:bg-[#162033] border border-[#22304A] text-[#94A3B8] hover:text-white disabled:opacity-30 text-xs font-medium transition-colors"
                 >
                   Next →
                 </button>
@@ -446,25 +445,25 @@ export const TestModePage = () => {
 
           {/* Diagnostic Result Banner (If Submitted) */}
           {isSubmitted && testResult && (
-            <div className="p-6 rounded-3xl bg-slate-900 border border-emerald-500/40 space-y-6 shadow-2xl">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div className="p-6 rounded-2xl bg-[#111A2B] border border-teal-500/40 space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#22304A] pb-4">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-teal-400">
                     EXAM PERFORMANCE ANALYSIS
                   </span>
-                  <h3 className="text-2xl font-black text-white">
+                  <h3 className="text-2xl font-bold font-heading text-white">
                     Score: {testResult.score} / {testResult.totalQuestions}{' '}
-                    <span className="text-emerald-400">({testResult.accuracy}%)</span>
+                    <span className="text-teal-400">({testResult.accuracy}%)</span>
                   </h3>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-slate-400 font-mono">
+                  <span className="text-xs text-[#94A3B8] font-mono">
                     Time: {formatTime(testResult.timeSpentSeconds)}
                   </span>
                   <button
                     onClick={() => setIsTestActive(false)}
-                    className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs"
+                    className="px-5 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#070B14] font-semibold text-xs transition-colors"
                   >
                     Take Another Exam
                   </button>
@@ -474,42 +473,46 @@ export const TestModePage = () => {
               {/* Diagnostic Breakdown */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Strong Areas */}
-                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-2">
-                  <h4 className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                <div className="p-4 rounded-xl bg-teal-500/10 border border-teal-500/20 space-y-2">
+                  <h4 className="text-xs font-semibold text-teal-400 flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4" />
                     <span>Mastered Concepts ({testResult.strongTopics?.length || 0})</span>
                   </h4>
-                  <ul className="space-y-1 text-xs text-slate-300">
+                  <ul className="space-y-1 text-xs text-[#94A3B8]">
                     {testResult.strongTopics?.map((t, idx) => (
-                      <li key={idx}>✓ {t}</li>
+                      <li key={idx} className="flex items-center gap-1">
+                        <span className="text-teal-400 font-bold">✓</span> {t}
+                      </li>
                     ))}
                     {(!testResult.strongTopics || testResult.strongTopics.length === 0) && (
-                      <li className="text-slate-500">None identified</li>
+                      <li className="text-[#64748B]">None identified</li>
                     )}
                   </ul>
                 </div>
 
                 {/* Weak Areas */}
                 <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 space-y-2">
-                  <h4 className="text-xs font-bold text-red-400 flex items-center gap-1.5">
+                  <h4 className="text-xs font-semibold text-red-400 flex items-center gap-1.5">
                     <AlertTriangle className="w-4 h-4" />
                     <span>Areas Requiring Revision ({testResult.weakTopics?.length || 0})</span>
                   </h4>
-                  <ul className="space-y-1 text-xs text-slate-300">
+                  <ul className="space-y-1 text-xs text-[#94A3B8]">
                     {testResult.weakTopics?.map((t, idx) => (
-                      <li key={idx}>⚠️ {t}</li>
+                      <li key={idx} className="flex items-center gap-1">
+                        <span className="text-amber-400 font-bold">⚠️</span> {t}
+                      </li>
                     ))}
                     {(!testResult.weakTopics || testResult.weakTopics.length === 0) && (
-                      <li className="text-emerald-400">Zero weak areas! Outstanding job.</li>
+                      <li className="text-teal-400">Zero weak areas! Outstanding job.</li>
                     )}
                   </ul>
                 </div>
               </div>
 
               {/* AI Performance Advice */}
-              <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1 text-xs">
-                <span className="font-bold text-emerald-400">🤖 AI Examiner Feedback:</span>
-                <p className="text-slate-300 leading-relaxed">{testResult.aiFeedback}</p>
+              <div className="p-4 rounded-xl bg-[#0B1220] border border-[#22304A] space-y-1 text-xs">
+                <span className="font-semibold text-teal-400">AI Examiner Feedback:</span>
+                <p className="text-[#94A3B8] leading-relaxed">{testResult.aiFeedback}</p>
               </div>
             </div>
           )}

@@ -8,18 +8,13 @@ import {
   Sparkles,
   Plus,
   Trash2,
-  Pin,
   Download,
   RotateCw,
   CheckCircle2,
   XCircle,
   Loader2,
-  ExternalLink,
   Award,
   AlertCircle,
-  Users,
-  Send,
-  Flame,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { api } from '../../services/api';
@@ -389,9 +384,9 @@ export const WorkspaceTabs = ({
   ];
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+    <div className="bg-[#111A2B] border border-[#22304A] rounded-2xl overflow-hidden">
       {/* Tabs Bar */}
-      <div className="flex items-center gap-1 p-2 border-b border-slate-800 bg-slate-950/70 overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-1 p-2 border-b border-[#22304A] bg-[#0B1220] overflow-x-auto scrollbar-none">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -399,10 +394,10 @@ export const WorkspaceTabs = ({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                 isActive
-                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                  ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30'
+                  : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#162033]'
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
@@ -420,29 +415,29 @@ export const WorkspaceTabs = ({
         {activeTab === 'summary' && (
           <div className="space-y-6">
             {isLoadingSummary && (
-              <div className="flex flex-col items-center justify-center py-16 gap-3 text-slate-400 text-xs">
-                <Loader2 className="w-6 h-6 text-emerald-400 animate-spin" />
+              <div className="flex flex-col items-center justify-center py-16 gap-3 text-[#94A3B8] text-xs">
+                <Loader2 className="w-6 h-6 text-teal-400 animate-spin" />
                 <span>Synthesizing structured study guide from academic syllabus...</span>
               </div>
             )}
 
             {!isLoadingSummary && summaryData && (
-              <div className="space-y-6 text-xs text-slate-300 leading-relaxed">
+              <div className="space-y-6 text-xs text-[#94A3B8] leading-relaxed">
                 {/* Quick Summary Banner */}
-                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-1">
-                  <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                <div className="p-4 rounded-xl bg-teal-500/10 border border-teal-500/20 space-y-1">
+                  <h4 className="text-xs font-semibold text-teal-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>Quick Summary</span>
                   </h4>
-                  <p className="text-slate-200 text-xs">{summaryData.quickSummary}</p>
+                  <p className="text-[#F8FAFC] text-xs">{summaryData.quickSummary}</p>
                 </div>
 
                 {/* Detailed Summary */}
                 <div className="space-y-2">
-                  <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+                  <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
                     Detailed Overview
                   </h4>
-                  <p className="text-slate-300 leading-relaxed text-xs">
+                  <p className="text-[#94A3B8] leading-relaxed text-xs">
                     {summaryData.detailedSummary}
                   </p>
                 </div>
@@ -450,14 +445,14 @@ export const WorkspaceTabs = ({
                 {/* Important Concepts Pills */}
                 {summaryData.importantConcepts && (
                   <div className="space-y-2">
-                    <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+                    <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
                       Important Concepts
                     </h4>
                     <div className="flex flex-wrap gap-2">
                       {summaryData.importantConcepts.map((c, i) => (
                         <span
                           key={i}
-                          className="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-200 border border-slate-700/80 font-medium text-[11px]"
+                          className="px-2.5 py-1 rounded-lg bg-[#162033] text-slate-200 border border-[#22304A] font-medium text-[11px]"
                         >
                           ✦ {c}
                         </span>
@@ -469,19 +464,19 @@ export const WorkspaceTabs = ({
                 {/* Key Definitions Table */}
                 {summaryData.keyDefinitions && (
                   <div className="space-y-2">
-                    <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+                    <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
                       Key Terminology & Definitions
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {summaryData.keyDefinitions.map((d, i) => (
                         <div
                           key={i}
-                          className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/80 space-y-1"
+                          className="p-3 rounded-xl bg-[#0B1220] border border-[#22304A] space-y-1"
                         >
-                          <span className="font-bold text-emerald-400 font-mono text-xs">
+                          <span className="font-semibold text-teal-400 font-mono text-xs">
                             {d.term}
                           </span>
-                          <p className="text-[11px] text-slate-300">{d.definition}</p>
+                          <p className="text-[11px] text-[#94A3B8]">{d.definition}</p>
                         </div>
                       ))}
                     </div>
@@ -491,20 +486,20 @@ export const WorkspaceTabs = ({
                 {/* Formulas & Calculations */}
                 {summaryData.formulas && summaryData.formulas.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+                    <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
                       Important Formulas & Quantitative Metrics
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {summaryData.formulas.map((f, i) => (
                         <div
                           key={i}
-                          className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/80 space-y-1"
+                          className="p-3 rounded-xl bg-[#0B1220] border border-[#22304A] space-y-1"
                         >
-                          <span className="font-semibold text-slate-200 text-xs">{f.name}</span>
-                          <div className="px-2 py-1 rounded bg-slate-950 font-mono text-emerald-400 text-xs border border-slate-800">
+                          <span className="font-semibold text-[#F8FAFC] text-xs">{f.name}</span>
+                          <div className="px-2 py-1 rounded bg-[#070B14] font-mono text-teal-400 text-xs border border-[#22304A]">
                             {f.formula}
                           </div>
-                          <p className="text-[10px] text-slate-400">{f.explanation}</p>
+                          <p className="text-[10px] text-[#94A3B8]">{f.explanation}</p>
                         </div>
                       ))}
                     </div>
@@ -515,7 +510,7 @@ export const WorkspaceTabs = ({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {summaryData.examNotes && (
                     <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 space-y-1.5">
-                      <h5 className="font-bold text-amber-400 flex items-center gap-1.5 text-xs">
+                      <h5 className="font-semibold text-amber-400 flex items-center gap-1.5 text-xs">
                         <Award className="w-4 h-4" />
                         <span>University Exam High-Yield Points</span>
                       </h5>
@@ -529,7 +524,7 @@ export const WorkspaceTabs = ({
 
                   {summaryData.commonMistakes && (
                     <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 space-y-1.5">
-                      <h5 className="font-bold text-red-400 flex items-center gap-1.5 text-xs">
+                      <h5 className="font-semibold text-red-400 flex items-center gap-1.5 text-xs">
                         <AlertCircle className="w-4 h-4" />
                         <span>Common Student Traps & Pitfalls</span>
                       </h5>
@@ -552,10 +547,10 @@ export const WorkspaceTabs = ({
         {activeTab === 'notes' && (
           <div className="space-y-6">
             {/* Create Note Input */}
-            <form onSubmit={handleCreateNote} className="space-y-3 p-4 rounded-xl bg-slate-950/60 border border-slate-800">
+            <form onSubmit={handleCreateNote} className="space-y-3 p-4 rounded-xl bg-[#0B1220] border border-[#22304A]">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <Plus className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-xs font-semibold text-white flex items-center gap-1.5">
+                  <Plus className="w-3.5 h-3.5 text-teal-400" />
                   <span>Write or Generate Note for "{module?.title || topic}"</span>
                 </span>
                 <div className="flex items-center gap-2">
@@ -563,19 +558,19 @@ export const WorkspaceTabs = ({
                     type="button"
                     onClick={handleGenerateAiNote}
                     disabled={isGeneratingAiNote}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-colors disabled:opacity-50"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/20 text-teal-300 text-xs font-medium transition-colors disabled:opacity-50"
                   >
-                    {isGeneratingAiNote ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+                    {isGeneratingAiNote ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3 text-teal-400" />}
                     <span>Generate AI Notes</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={handleExportNotes}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition-colors"
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#162033] hover:bg-[#1f2d47] border border-[#22304A] text-[#94A3B8] hover:text-white text-xs transition-colors"
                     title="Export notes as Markdown"
                   >
-                    <Download className="w-3 h-3" />
+                    <Download className="w-3 h-3 text-teal-400" />
                     <span>Export (.md)</span>
                   </button>
                 </div>
@@ -586,7 +581,7 @@ export const WorkspaceTabs = ({
                 value={noteTitle}
                 onChange={(e) => setNoteTitle(e.target.value)}
                 placeholder="Note title (e.g. Critical Section & Peterson Algorithm Proof)..."
-                className="w-full bg-slate-900 text-xs text-slate-200 placeholder-slate-500 px-3 py-2 rounded-lg border border-slate-800 focus:outline-none focus:border-emerald-500/60"
+                className="w-full bg-[#111A2B] text-xs text-[#F8FAFC] placeholder-[#64748B] px-3 py-2 rounded-lg border border-[#22304A] focus:outline-none focus:border-teal-500/60"
               />
 
               <textarea
@@ -594,14 +589,14 @@ export const WorkspaceTabs = ({
                 onChange={(e) => setNoteContent(e.target.value)}
                 placeholder="Write your study notes, key equations, or lecturer takeaways here..."
                 rows={3}
-                className="w-full bg-slate-900 text-xs text-slate-200 placeholder-slate-500 p-3 rounded-lg border border-slate-800 focus:outline-none focus:border-emerald-500/60 resize-y"
+                className="w-full bg-[#111A2B] text-xs text-[#F8FAFC] placeholder-[#64748B] p-3 rounded-lg border border-[#22304A] focus:outline-none focus:border-teal-500/60 resize-y"
               />
 
               <div className="flex justify-end">
                 <button
                   type="submit"
                   disabled={!noteTitle.trim() && !noteContent.trim()}
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-slate-950 font-bold text-xs transition-all shadow-md shadow-emerald-600/20"
+                  className="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 disabled:opacity-40 text-[#070B14] font-semibold text-xs transition-colors"
                 >
                   Save Note
                 </button>
@@ -610,45 +605,45 @@ export const WorkspaceTabs = ({
 
             {/* Existing Notes Feed */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <h4 className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
                 Saved Notes for this Module ({notes.length})
               </h4>
 
               {notes.length === 0 ? (
-                <div className="p-8 text-center border border-dashed border-slate-800 rounded-xl text-slate-500 text-xs">
+                <div className="p-8 text-center border border-dashed border-[#22304A] rounded-xl text-[#64748B] text-xs">
                   No notes saved yet. Write your thoughts above or click <strong>Generate AI Notes</strong>!
                 </div>
               ) : (
                 notes.map((note) => (
                   <div
                     key={note.id}
-                    className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 space-y-2 transition-all"
+                    className="p-4 rounded-xl bg-[#0B1220] border border-[#22304A] hover:border-[#324466] space-y-2 transition-colors"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="space-y-0.5">
                         <div className="flex items-center gap-2">
-                          <h5 className="font-bold text-slate-200 text-xs">{note.title}</h5>
+                          <h5 className="font-semibold text-slate-200 text-xs">{note.title}</h5>
                           {note.isAiGenerated && (
-                            <span className="px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-semibold text-[9px] border border-emerald-500/20">
+                            <span className="px-1.5 py-0.5 rounded bg-teal-500/10 text-teal-300 font-medium text-[9px] border border-teal-500/20">
                               AI Generated
                             </span>
                           )}
                         </div>
-                        <span className="text-[10px] text-slate-500">
+                        <span className="text-[10px] text-[#64748B]">
                           {new Date(note.createdAt).toLocaleString()}
                         </span>
                       </div>
 
                       <button
                         onClick={() => handleDeleteNote(note.id)}
-                        className="text-slate-500 hover:text-red-400 p-1 rounded transition-colors"
+                        className="text-[#64748B] hover:text-red-400 p-1 rounded transition-colors"
                         title="Delete note"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
-                    <div className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
+                    <div className="text-xs text-[#94A3B8] leading-relaxed whitespace-pre-wrap">
                       {note.content}
                     </div>
                   </div>
@@ -663,8 +658,8 @@ export const WorkspaceTabs = ({
         {/* ========================================================= */}
         {activeTab === 'flashcards' && (
           <div className="space-y-6 max-w-xl mx-auto py-4">
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span className="font-semibold text-emerald-400">
+            <div className="flex items-center justify-between text-xs text-[#94A3B8]">
+              <span className="font-semibold text-teal-400">
                 Card {currentCardIndex + 1} of {flashcards.length}
               </span>
               <span>Click card to flip • Spaced Repetition</span>
@@ -676,41 +671,41 @@ export const WorkspaceTabs = ({
               className="relative w-full h-72 cursor-pointer perspective-1000 select-none group"
             >
               <div
-                className={`w-full h-full duration-500 transform-style-3d transition-transform rounded-2xl border p-6 flex flex-col justify-between shadow-2xl ${
+                className={`w-full h-full duration-500 transform-style-3d transition-transform rounded-2xl border p-6 flex flex-col justify-between shadow-xl ${
                   isFlipped
-                    ? 'rotate-y-180 bg-slate-900 border-emerald-500/50 shadow-emerald-500/10'
-                    : 'bg-slate-950 border-slate-800 hover:border-slate-700'
+                    ? 'rotate-y-180 bg-[#111A2B] border-teal-500/40 shadow-teal-500/5'
+                    : 'bg-[#0B1220] border-[#22304A] hover:border-[#324466]'
                 }`}
               >
                 {/* Front */}
                 <div className="space-y-4 backface-hidden">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-teal-400">
                     CONCEPT / QUESTION
                   </span>
                   <p className="text-sm md:text-base font-semibold text-slate-100 leading-snug">
                     {flashcards[currentCardIndex]?.question}
                   </p>
-                  <p className="text-[11px] text-slate-500 italic">
+                  <p className="text-[11px] text-[#64748B] italic">
                     (Click to reveal explanation and mnemonic)
                   </p>
                 </div>
 
                 {/* Back */}
                 <div className="space-y-3 backface-hidden rotate-y-180">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-400">
                     ANSWER & EXPLANATION
                   </span>
                   <p className="text-xs text-slate-200 leading-relaxed whitespace-pre-line">
                     {flashcards[currentCardIndex]?.answer}
                   </p>
                   {flashcards[currentCardIndex]?.mnemonic && (
-                    <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-300">
+                    <div className="p-2.5 rounded-lg bg-teal-500/10 border border-teal-500/20 text-[11px] text-teal-300">
                       💡 <strong>Mnemonic Hook:</strong> {flashcards[currentCardIndex].mnemonic}
                     </div>
                   )}
                 </div>
 
-                <div className="text-[10px] text-slate-500 text-right">
+                <div className="text-[10px] text-[#64748B] text-right">
                   Tap to flip
                 </div>
               </div>
@@ -720,7 +715,7 @@ export const WorkspaceTabs = ({
             <div className="flex items-center justify-center gap-3">
               <button
                 onClick={() => handleFlashcardStatus('dont_know')}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-400 text-xs font-semibold transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-medium transition-colors"
               >
                 <XCircle className="w-4 h-4" />
                 <span>Need Review</span>
@@ -728,7 +723,7 @@ export const WorkspaceTabs = ({
 
               <button
                 onClick={() => setIsFlipped(!isFlipped)}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#162033] hover:bg-[#1f2d47] border border-[#22304A] text-[#F8FAFC] text-xs font-medium transition-colors"
               >
                 <RotateCw className="w-4 h-4" />
                 <span>Flip</span>
@@ -736,7 +731,7 @@ export const WorkspaceTabs = ({
 
               <button
                 onClick={() => handleFlashcardStatus('know')}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#070B14] font-semibold text-xs transition-colors"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>I Know This (+15 XP)</span>
@@ -751,9 +746,9 @@ export const WorkspaceTabs = ({
         {activeTab === 'quiz' && (
           <div className="space-y-6">
             {/* Quiz Toolbar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-950/60 border border-slate-800">
+            <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-[#0B1220] border border-[#22304A]">
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5 text-xs text-slate-300">
+                <div className="flex items-center gap-1.5 text-xs text-[#94A3B8]">
                   <span>Difficulty:</span>
                   <select
                     value={quizDifficulty}
@@ -761,7 +756,7 @@ export const WorkspaceTabs = ({
                       setQuizDifficulty(e.target.value);
                       loadQuiz(e.target.value, quizCount);
                     }}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-emerald-400 font-semibold focus:outline-none"
+                    className="bg-[#111A2B] border border-[#22304A] rounded-lg px-2.5 py-1 text-xs text-teal-400 font-semibold focus:outline-none"
                   >
                     <option value="Easy">Easy</option>
                     <option value="Medium">Medium</option>
@@ -769,7 +764,7 @@ export const WorkspaceTabs = ({
                   </select>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-xs text-slate-300">
+                <div className="flex items-center gap-1.5 text-xs text-[#94A3B8]">
                   <span>Questions:</span>
                   <select
                     value={quizCount}
@@ -777,7 +772,7 @@ export const WorkspaceTabs = ({
                       setQuizCount(Number(e.target.value));
                       loadQuiz(quizDifficulty, Number(e.target.value));
                     }}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-200 focus:outline-none"
+                    className="bg-[#111A2B] border border-[#22304A] rounded-lg px-2.5 py-1 text-xs text-[#F8FAFC] focus:outline-none"
                   >
                     <option value={5}>5 Questions</option>
                     <option value={10}>10 Questions</option>
@@ -788,7 +783,7 @@ export const WorkspaceTabs = ({
               <button
                 onClick={() => loadQuiz(quizDifficulty, quizCount)}
                 disabled={isLoadingQuiz}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#162033] hover:bg-[#1f2d47] border border-[#22304A] text-[#F8FAFC] text-xs font-medium transition-colors"
               >
                 <RotateCw className={`w-3.5 h-3.5 ${isLoadingQuiz ? 'animate-spin' : ''}`} />
                 <span>Regenerate Quiz</span>
@@ -796,28 +791,27 @@ export const WorkspaceTabs = ({
             </div>
 
             {isLoadingQuiz ? (
-              <div className="flex flex-col items-center justify-center py-16 gap-3 text-slate-400 text-xs">
-                <Loader2 className="w-6 h-6 text-emerald-400 animate-spin" />
+              <div className="flex flex-col items-center justify-center py-16 gap-3 text-[#94A3B8] text-xs">
+                <Loader2 className="w-6 h-6 text-teal-400 animate-spin" />
                 <span>Generating conceptual exam questions from lecture syllabus...</span>
               </div>
             ) : (
               <div className="space-y-6">
                 {quizQuestions.map((q, qIndex) => {
                   const chosenOption = selectedAnswers[q.id];
-                  const hasAnswered = chosenOption !== undefined;
 
                   return (
                     <div
                       key={q.id}
-                      className="p-5 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-3"
+                      className="p-5 rounded-2xl bg-[#0B1220] border border-[#22304A] space-y-3"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <h4 className="text-xs md:text-sm font-semibold text-slate-100 leading-snug">
-                          <span className="text-emerald-400 font-mono mr-2">Q{qIndex + 1}.</span>
+                          <span className="text-teal-400 font-mono mr-2">Q{qIndex + 1}.</span>
                           {q.question}
                         </h4>
                         {q.concept && (
-                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 border border-slate-700 shrink-0">
+                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#111A2B] text-[#94A3B8] border border-[#22304A] shrink-0">
                             {q.concept}
                           </span>
                         )}
@@ -829,19 +823,19 @@ export const WorkspaceTabs = ({
                           const isSelected = chosenOption === optIdx;
                           const isCorrect = optIdx === q.correctIndex;
 
-                          let btnStyle = 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700';
+                          let btnStyle = 'bg-[#111A2B] border-[#22304A] text-[#94A3B8] hover:border-[#324466] hover:text-white';
 
                           if (isSelected && !isSubmitted) {
-                            btnStyle = 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 font-semibold';
+                            btnStyle = 'bg-teal-500/15 border-teal-500/60 text-teal-300 font-semibold';
                           }
 
                           if (isSubmitted) {
                             if (isCorrect) {
-                              btnStyle = 'bg-emerald-500/20 border-emerald-500 text-emerald-300 font-bold';
+                              btnStyle = 'bg-teal-500/15 border-teal-500 text-teal-300 font-semibold';
                             } else if (isSelected && !isCorrect) {
-                              btnStyle = 'bg-red-500/20 border-red-500 text-red-300';
+                              btnStyle = 'bg-red-500/15 border-red-500 text-red-300';
                             } else {
-                              btnStyle = 'opacity-40 bg-slate-900 border-slate-800 text-slate-400';
+                              btnStyle = 'opacity-40 bg-[#111A2B] border-[#22304A] text-[#64748B]';
                             }
                           }
 
@@ -850,17 +844,17 @@ export const WorkspaceTabs = ({
                               key={optIdx}
                               onClick={() => handleSelectOption(q.id, optIdx)}
                               disabled={isSubmitted}
-                              className={`p-3 rounded-xl border text-left text-xs transition-all flex items-center justify-between ${btnStyle}`}
+                              className={`p-3 rounded-xl border text-left text-xs transition-colors flex items-center justify-between ${btnStyle}`}
                             >
                               <span>
-                                <strong className="mr-2 text-slate-500 font-mono">
+                                <strong className="mr-2 text-[#64748B] font-mono">
                                   {String.fromCharCode(65 + optIdx)}.
                                 </strong>
                                 {opt}
                               </span>
 
                               {isSubmitted && isCorrect && (
-                                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                                <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
                               )}
                               {isSubmitted && isSelected && !isCorrect && (
                                 <XCircle className="w-4 h-4 text-red-400 shrink-0" />
@@ -872,12 +866,12 @@ export const WorkspaceTabs = ({
 
                       {/* Post-submission deep explanation */}
                       {isSubmitted && (
-                        <div className="mt-3 p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5 text-xs">
-                          <div className="flex items-center gap-1.5 font-bold text-emerald-400">
+                        <div className="mt-3 p-3.5 rounded-xl bg-[#111A2B] border border-[#22304A] space-y-1.5 text-xs">
+                          <div className="flex items-center gap-1.5 font-semibold text-teal-400">
                             <Sparkles className="w-3.5 h-3.5" />
                             <span>Why this answer is correct:</span>
                           </div>
-                          <p className="text-slate-300 text-[11px] leading-relaxed">
+                          <p className="text-[#94A3B8] text-[11px] leading-relaxed">
                             {q.explanation}
                           </p>
                           {q.recommendedReview && (
@@ -892,18 +886,18 @@ export const WorkspaceTabs = ({
                 })}
 
                 {/* Submit Quiz Bar */}
-                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+                <div className="p-4 rounded-xl bg-[#0B1220] border border-[#22304A] flex items-center justify-between">
                   <div className="text-xs">
                     {isSubmitted ? (
-                      <span className="font-bold text-white text-sm">
+                      <span className="font-semibold text-white text-sm">
                         Score:{' '}
-                        <span className="text-emerald-400">
+                        <span className="text-teal-400 font-bold">
                           {quizScore} / {quizQuestions.length}
                         </span>{' '}
                         ({Math.round((quizScore / quizQuestions.length) * 100)}%)
                       </span>
                     ) : (
-                      <span className="text-slate-400">
+                      <span className="text-[#94A3B8]">
                         {Object.keys(selectedAnswers).length} of {quizQuestions.length} answered
                       </span>
                     )}
@@ -913,14 +907,14 @@ export const WorkspaceTabs = ({
                     <button
                       onClick={handleSubmitQuiz}
                       disabled={Object.keys(selectedAnswers).length === 0}
-                      className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-slate-950 font-bold text-xs transition-all shadow-lg shadow-emerald-600/20"
+                      className="px-5 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 disabled:opacity-40 text-[#070B14] font-semibold text-xs transition-colors"
                     >
                       Submit Quiz
                     </button>
                   ) : (
                     <button
                       onClick={() => loadQuiz(quizDifficulty, quizCount)}
-                      className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-colors"
+                      className="px-4 py-2 rounded-xl bg-[#162033] hover:bg-[#1f2d47] border border-[#22304A] text-white text-xs font-medium transition-colors"
                     >
                       Try Another Quiz
                     </button>
@@ -947,10 +941,10 @@ export const WorkspaceTabs = ({
                 <button
                   key={m.id}
                   onClick={() => handleStartSocratic(m.id)}
-                  className={`p-2.5 rounded-xl border text-xs font-medium flex items-center justify-center gap-1.5 transition-all ${
+                  className={`p-2.5 rounded-xl border text-xs font-medium flex items-center justify-center gap-1.5 transition-colors ${
                     socraticMode === m.id
-                      ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 font-bold'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:text-slate-200'
+                      ? 'bg-teal-500/15 border-teal-500/40 text-teal-300 font-semibold'
+                      : 'bg-[#0B1220] border-[#22304A] text-[#94A3B8] hover:text-white'
                   }`}
                 >
                   <span>{m.icon}</span>
@@ -960,13 +954,13 @@ export const WorkspaceTabs = ({
             </div>
 
             {/* Conversation Feed */}
-            <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-3 min-h-[300px] max-h-[420px] overflow-y-auto">
+            <div className="p-4 rounded-2xl bg-[#0B1220] border border-[#22304A] space-y-3 min-h-[300px] max-h-[420px] overflow-y-auto">
               {socraticChat.length === 0 ? (
-                <div className="py-12 text-center text-slate-500 text-xs space-y-2">
+                <div className="py-12 text-center text-[#64748B] text-xs space-y-2">
                   <p>Select a mode above or click below to begin your Socratic session!</p>
                   <button
                     onClick={() => handleStartSocratic(socraticMode)}
-                    className="px-4 py-2 rounded-xl bg-emerald-600 text-slate-950 font-bold text-xs"
+                    className="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-[#070B14] font-semibold text-xs transition-colors"
                   >
                     Start Session
                   </button>
@@ -978,10 +972,10 @@ export const WorkspaceTabs = ({
                     className={`flex ${msg.role === 'student' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[88%] rounded-2xl p-3 text-xs leading-relaxed whitespace-pre-wrap ${
+                      className={`max-w-[88%] rounded-xl p-3 text-xs leading-relaxed whitespace-pre-wrap ${
                         msg.role === 'student'
-                          ? 'bg-emerald-600 text-slate-950 font-medium rounded-br-none'
-                          : 'bg-slate-800/90 border border-slate-700 text-slate-200 rounded-bl-none'
+                          ? 'bg-teal-500 text-[#070B14] font-medium rounded-br-none'
+                          : 'bg-[#162033] border border-[#22304A] text-slate-200 rounded-bl-none'
                       }`}
                     >
                       {msg.text}
@@ -991,8 +985,8 @@ export const WorkspaceTabs = ({
               )}
 
               {isLoadingSocratic && (
-                <div className="flex items-center gap-2 text-xs text-slate-400 italic">
-                  <Loader2 className="w-3.5 h-3.5 text-emerald-400 animate-spin" />
+                <div className="flex items-center gap-2 text-xs text-[#94A3B8] italic">
+                  <Loader2 className="w-3.5 h-3.5 text-teal-400 animate-spin" />
                   <span>Socratic tutor is reflecting on your answer...</span>
                 </div>
               )}
@@ -1012,12 +1006,12 @@ export const WorkspaceTabs = ({
                 onChange={(e) => setSocraticInput(e.target.value)}
                 placeholder="Explain your reasoning here..."
                 disabled={isLoadingSocratic}
-                className="flex-1 bg-slate-950 text-xs text-slate-200 placeholder-slate-500 px-4 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-emerald-500/60"
+                className="flex-1 bg-[#111A2B] text-xs text-[#F8FAFC] placeholder-[#64748B] px-4 py-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:border-teal-500/60 transition-colors"
               />
               <button
                 type="submit"
                 disabled={!socraticInput.trim() || isLoadingSocratic}
-                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-slate-950 font-bold text-xs transition-all shadow-md shadow-emerald-600/20"
+                className="px-4 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 disabled:opacity-40 text-[#070B14] font-semibold text-xs transition-colors"
               >
                 Send
               </button>

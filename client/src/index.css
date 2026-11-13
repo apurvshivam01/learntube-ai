@@ -1,64 +1,113 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Manrope', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --color-brand-teal: #14B8A6;
+  --color-brand-teal-bright: #2DD4BF;
+  --color-brand-teal-dark: #0D9488;
+  --color-brand-blue: #3B82F6;
+  --color-brand-purple: #8B5CF6;
+}
+
 @layer base {
   body {
-    background-color: #020617;
-    color: #f8fafc;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #070B14;
+    color: #F8FAFC;
+    font-family: var(--font-sans);
     min-height: 100vh;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
   }
 }
 
-/* Custom scrollbars, glass panels, 3D flip */
+/* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: #070B14;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(51, 65, 85, 0.8);
+  background: #22304A;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(34, 197, 94, 0.6);
+  background: #324466;
 }
 
-.glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Standard surface and card styles */
+.saas-card {
+  background-color: #111A2B;
+  border: 1px solid #22304A;
+  border-radius: 16px;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.glass-card {
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+.saas-card:hover {
+  border-color: #2E4166;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
 }
 
-.glass-card:hover {
-  border-color: rgba(34, 197, 94, 0.3);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+.saas-surface {
+  background-color: #111A2B;
+  border: 1px solid #22304A;
 }
 
-.perspective-1000 {
-  perspective: 1000px;
+.saas-surface-elevated {
+  background-color: #162033;
+  border: 1px solid #22304A;
 }
 
-.transform-style-3d {
-  transform-style: preserve-3d;
+/* Form inputs & focus rings */
+.saas-input {
+  background-color: #111A2B;
+  border: 1px solid #22304A;
+  color: #F8FAFC;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 
-.backface-hidden {
-  backface-visibility: hidden;
+.saas-input:focus {
+  outline: none;
+  border-color: rgba(20, 184, 166, 0.6);
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2);
 }
 
-.rotate-y-180 {
-  transform: rotateY(180deg);
+/* Button styles */
+.btn-primary {
+  background-color: #14B8A6;
+  color: #070B14;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.btn-primary:hover {
+  background-color: #2DD4BF;
+}
+
+.btn-secondary {
+  background-color: #111A2B;
+  border: 1px solid #22304A;
+  color: #F8FAFC;
+  font-weight: 500;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.btn-secondary:hover {
+  background-color: #162033;
+  border-color: #324466;
+  color: #FFFFFF;
 }
