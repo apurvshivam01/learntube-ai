@@ -15,6 +15,7 @@ import { useApp } from '../context/AppContext';
 export const MasteryPage = () => {
   const { mastery } = useApp();
   const [tests, setTests] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadTests = async () => {
@@ -173,7 +174,13 @@ export const MasteryPage = () => {
           </Link>
         </div>
 
-        {tests.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-3">
+            {[1, 2].map((n) => (
+              <div key={n} className="p-4 rounded-xl bg-[#0B1220] border border-[#22304A] h-20 animate-pulse" />
+            ))}
+          </div>
+        ) : tests.length === 0 ? (
           <div className="p-8 text-center text-[#64748B] text-xs border border-dashed border-[#22304A] rounded-xl">
             No exam sessions logged yet. Head to <strong>Practice</strong> to take your first assessment!
           </div>

@@ -12,6 +12,7 @@ export const DiscoveryPage = () => {
   const [channels, setChannels] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [filterQuery, setFilterQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadChannels = async () => {
@@ -28,17 +29,22 @@ export const DiscoveryPage = () => {
   }, []);
 
   const categories = [
-    'all',
-    'Computer Science & Engineering',
-    'AI, Systems & Algorithms',
-    'Full-Stack Software Engineering',
-    'Mathematics & Neural Networks',
-    'Introduction to Computer Science',
+    { id: 'all', label: 'All Fields' },
+    { id: 'Systems', label: 'Systems & OS' },
+    { id: 'Algorithms', label: 'Algorithms' },
+    { id: 'AI', label: 'AI & Machine Learning' },
+    { id: 'Engineering', label: 'Software Engineering' },
   ];
 
   const filtered = channels.filter((ch) => {
-    const matchesCat = selectedCategory === 'all' || ch.category.toLowerCase().includes(selectedCategory.toLowerCase());
-    const matchesQuery = !filterQuery || ch.title.toLowerCase().includes(filterQuery.toLowerCase()) || ch.description.toLowerCase().includes(filterQuery.toLowerCase()) || ch.university.toLowerCase().includes(filterQuery.toLowerCase());
+    const matchesCat =
+      selectedCategory === 'all' ||
+      (ch.category && ch.category.toLowerCase().includes(selectedCategory.toLowerCase()));
+    const matchesQuery =
+      !filterQuery ||
+      ch.title.toLowerCase().includes(filterQuery.toLowerCase()) ||
+      ch.description.toLowerCase().includes(filterQuery.toLowerCase()) ||
+      ch.university.toLowerCase().includes(filterQuery.toLowerCase());
     return matchesCat && matchesQuery;
   });
 
@@ -72,21 +78,35 @@ export const DiscoveryPage = () => {
         </div>
 
         <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 scrollbar-none">
-          {['All', 'MIT & Stanford', 'Algorithms', 'AI & Math'].map((tab, idx) => (
+          {categories.map((cat) => (
             <button
-              key={idx}
-              onClick={() => setFilterQuery(tab === 'All' ? '' : tab)}
-              className="text-xs whitespace-nowrap px-3 py-1.5 rounded-lg bg-[#111A2B] hover:bg-[#162033] text-[#94A3B8] hover:text-[#F8FAFC] border border-[#22304A] hover:border-[#324466] font-medium transition-colors"
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`text-xs whitespace-nowrap px-3 py-1.5 rounded-lg border font-medium transition-colors ${
+                selectedCategory === cat.id
+                  ? 'bg-teal-500/15 text-teal-300 border-teal-500/30'
+                  : 'bg-[#111A2B] hover:bg-[#162033] text-[#94A3B8] hover:text-[#F8FAFC] border-[#22304A]'
+              }`}
             >
-              {tab}
+              {cat.label}
             </button>
           ))}
         </div>
       </div>
 
+      {/* Loading Skeleton */}
+      {isLoading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <div key={n} className="saas-card p-5 rounded-2xl h-44 animate-pulse bg-[#111A2B]/50" />
+          ))}
+        </div>
+      )}
+
       {/* Channels Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map((ch) => (
+      {!isLoading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map((ch) => (
           <div
             key={ch.id}
             className="saas-card p-5 rounded-2xl flex flex-col justify-between space-y-4 group"
@@ -128,6 +148,7 @@ export const DiscoveryPage = () => {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 };

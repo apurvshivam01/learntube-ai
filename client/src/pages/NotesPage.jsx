@@ -16,6 +16,7 @@ export const NotesPage = () => {
   const [notes, setNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPinned, setFilterPinned] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // New note form
   const [newTitle, setNewTitle] = useState('');
@@ -210,14 +211,29 @@ export const NotesPage = () => {
       </form>
 
       {/* Notes Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredNotes.map((note) => (
-          <div
-            key={note.id}
-            className={`saas-card p-5 rounded-2xl flex flex-col justify-between space-y-4 ${
-              note.isPinned ? 'border-amber-500/40' : ''
-            }`}
-          >
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="saas-card p-5 rounded-2xl h-48 animate-pulse bg-[#111A2B]/40" />
+          ))}
+        </div>
+      ) : filteredNotes.length === 0 ? (
+        <div className="saas-card p-10 rounded-2xl text-center space-y-3">
+          <FileText className="w-8 h-8 text-[#64748B] mx-auto" />
+          <h3 className="text-sm font-semibold text-[#F8FAFC]">No notes found</h3>
+          <p className="text-xs text-[#94A3B8] max-w-sm mx-auto">
+            Create your first note above or add lecture notes while watching lessons in the course workspace.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredNotes.map((note) => (
+            <div
+              key={note.id}
+              className={`saas-card p-5 rounded-2xl flex flex-col justify-between space-y-4 ${
+                note.isPinned ? 'border-amber-500/40' : ''
+              }`}
+            >
             <div className="space-y-3">
               <div className="flex items-start justify-between gap-2">
                 <div className="space-y-1">
@@ -275,11 +291,6 @@ export const NotesPage = () => {
           </div>
         ))}
       </div>
-
-      {filteredNotes.length === 0 && (
-        <div className="p-12 text-center text-[#64748B] text-xs border border-dashed border-[#22304A] rounded-2xl">
-          No study notes match your filters. Create your first note above!
-        </div>
       )}
     </div>
   );
